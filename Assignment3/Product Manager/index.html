@@ -1,0 +1,238 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Manager Application</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    function onSaveChanges() {
+                const id = parseInt(document.getElementById("productId").value);
+                const name = document.getElementById("name").value;
+                const qty = document.getElementById("quality").value;
+
+                const pro = new Employee(id, name, qty);
+                try {
+                    instance.updateEmployee(emp);
+                    populate();
+                } catch (error) {
+                    alert(error)
+                }
+            }
+  </script>
+</head>
+
+<body>
+
+  <fieldset>
+    <legend>
+      <h2>Form</h2>
+    </legend>
+    <form id="form">
+      <input type="text" id="productId" name="productId" placeholder="ProductId"><br><br>
+      <input type="text" id="name" name="name" placeholder="Name"><br><br>
+      <input type="text" id="quality" name="quality" placeholder="Quality"><br><br>
+      <input type="button" value="Submit" id="btn" onclick="Submit()">
+      <button onclick="onSaveChanges()"></button>
+      <input type="reset">
+    </form>
+  </fieldset>
+
+
+  <br>
+  <div id="msg"></div>
+
+
+  <fieldset>
+    <legend>
+      <h2>Data from Local Storage</h2>
+    </legend>
+
+    <table border="2" id="table">
+      <tr>
+        <td class="col">Product Id</td>
+        <td class="col">Name</td>
+        <td class="col">Quality</td>
+        <td class="col">Action</td>
+      </tr>
+    </table>
+  </fieldset>
+
+
+  <script src="script.js"></script>
+</body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Product Manager Record</title>
+        <script src="./index.js"></script>
+        <script>
+
+            function createRow(pro){
+                let row = document.createElement("tr");
+                row.innerHTML = `<td>${pro.pId}</td>
+                <td>${pro.pName}</td>
+                <td>${pro.pAddress}</td>
+                <td>${pro.pCost}</td>
+                <td>${pro.pQuality}</td>
+                `;
+                return row;
+            }
+            function populate(){
+                //get the table element....
+                const table = document.querySelector("#tblRecords");
+                //get the heading element....
+                const firstRow = document.querySelector("#theading");
+                table.innerHTML = "";//remove all the elements
+                table.appendChild(firstRow);//add the heading
+                for(const pro of data){//iterate thro the array
+                    let row = createRow(pro);//Create row to the table
+                    table.appendChild(row);//add the row to the table
+                }
+            }
+            window.addEventListener("load", function(){
+                populate();
+            })
+            //This function will be called when the user clicks the Edit link in the Nav Section. 
+            function onEdit() {
+                const id = prompt("Enter the Id of the Product to Edit");
+                try{
+                    const foundRec = instance.getProduct(id)
+                    document.getElementById("txtpId").value = foundRec.pId;    
+                    document.getElementById("txtpName").value = foundRec.pName;    
+                    document.getElementById("txtpAddress").value = foundRec.pAddress;    
+                    document.getElementById("txtpCost").value = foundRec.pCost;
+                    document.getElementById("txtpQuality").value = foundRec.pQuality;
+
+                }catch(ex){
+                    alert(ex);
+                }    
+            }
+
+            function onSaveChanges() {
+
+                const id = parseInt(document.getElementById("txtpId").value);
+                const name = document.getElementById("txtpName").value;
+                const address = document.getElementById("txtpAddress").value;
+                const cost= parseFloat(document.getElementById("txtpCost").value);
+                const quality= document.getElementById("txtpQuality").value;
+
+
+                const pro = new Product(id, name, address, cost,quality);
+                try {
+                    instance.updateProduct(pro);
+                    populate();
+                } catch (error) {
+                    alert(error)
+                }
+            }
+            function onAdd() {
+                const id = parseInt(document.getElementById("txtpId").value);
+                const name = document.getElementById("txtpName").value;
+                const address = document.getElementById("txtpAddress").value;
+                const cost= parseFloat(document.getElementById("txtpCost").value);
+                const quality= document.getElementById("txtpQuality").value;
+                const pro = new Product(id, name, address, cost,quality);
+                try {
+                    instance.addProduct(pro);
+                    readingDataFromLocalStorage(pro);
+                    populate();
+                } catch (error) {
+                    alert(error)
+                }
+            }
+            function readingDataFromLocalStorage(pro) {
+ 
+ var i = localStorage.setItem("ProductId", pro.proId);
+ var n = localStorage.setItem("Name", pro.proName);
+ var a = localStorage.setItem("Adrress", pro.proAddress);
+ var c = localStorage.setItem("Cost", pro.proCost);
+ var q = localStorage.setItem("Quality", pro.proQuality);
+
+ var i1 = localStorage.getItem("ProductId", i);
+ var n1 = localStorage.getItem("Name", n);
+ var a1 = localStorage.getItem("Adrress",a);
+ var c1 = localStorage.getItem("Cost", c);
+ var q1 = localStorage.getItem("Quality", q);
+
+//  var records = [i1,n1,a1,c1,q1];
+//  return records;
+// return;
+}
+// function Submit() {
+//   var pro = instance.getProduct();
+//   var readData = readingDataFromLocalStorage(pro);
+//   if (pro == false) {
+//     msg.innerHTML = `<h1 style = "color: red;">Please enter data !</h1>`;
+//   } else {
+//     if (row == null) {
+//      instance.addProduct(readData);
+//       msg.innerHTML = `<h1 style = "color: yellow;">Data Inserted !</h1>`;
+//     } else {
+//       instance.updateProduct();
+//       msg.innerHTML = `<h1 style = "color: orange;">Data Updated !</h1>`;
+//     }
+//   }
+
+//   document.getElementById("table").reset();
+// }
+        </script>
+</head>
+<body>
+    <h1>Product Manager Record </h1>
+    <nav>
+        <a href="#" onclick="onEdit()">Edit Record</a>
+        <a href="#" onclick="onDelete()">Delete Record</a>
+        <a href="#" onclick="onAdd()">Add Record</a>
+    </nav>
+    <hr>
+    <div>
+        <h2>List of Products</h2>
+        <hr>
+        <table id="tblRecords" border="2">
+            <tr id="theading">
+                <th>Product ID</th>
+                <th>Product Name</th>
+                <th>Product Address</th>
+                <th>Product Cost</th>
+                <th>Product Quality</th>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <h2>Details of the Product</h2>
+        <p>
+            Product ID:
+            <input id="txtpId"  type="number">
+        </p>
+        <p>
+            Product Name:
+            <input type="text" id="txtpName">
+        </p>
+        <p>
+            Product Address:
+            <input type="text" id="txtpAddress">
+        </p>
+        <p>
+            Product Cost:
+            <input type="number" id="txtpCost">
+        </p>
+        <p>
+            Product Quality:
+            <input type="text" id="txtpQuality">
+        </p>
+        <p>
+            <input type="button" value="Save Changes" onclick="onSaveChanges()">
+            <button onclick="Submit()">Submit</button>
+        </p>
+    </div>
+</body>
+</html>
